@@ -1,0 +1,1 @@
+-- see :help vimtex-default-mappings for vimtex provided mappings
