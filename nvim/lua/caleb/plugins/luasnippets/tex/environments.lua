@@ -12,45 +12,21 @@ local get_visual = helpers.get_visual
 local line_begin = require("luasnip.extras.expand_conditions").line_begin
 
 local tex = {}
-tex.in_tikz = function()
-  local outer_env = vim.fn['vimtex#env#get_outer']()
-  return outer_env.name == 'tikzpicture'
-end
 tex.in_mathzone = function() return vim.fn['vimtex#syntax#in_mathzone']() == 1 end
 tex.in_text = function()
-  return not tex.in_mathzone() and not tex.in_tikz()
+  return not tex.in_mathzone()
 end
 
 
 return {
 
--- INLINE MATH
+-- NORMAL MATH TEXT
 s({trig = "([^%l])mm", regTrig = true, wordTrig = false, snippetType="autosnippet"},
   fmta(
     "<>$<>$<>",
     {
       f( function(_, snip) return snip.captures[1] end ),
       d(1, get_visual),
-      i(0)
-    }
-  ),
-  { condition = tex.in_text }
-),
--- INLINE MATH ON NEW LINE
-s({trig = "^mm", regTrig = true, wordTrig = false, snippetType="autosnippet"},
-  fmta(
-    "$<>$",
-    {
-      i(1),
-    }
-  )
-),
--- INLINE MATH (environment)
-s({trig = "([^%l])mm", regTrig = true, wordTrig = false, snippetType="autosnippet"},
-  fmta(
-    "<>$<>$",
-    {
-      f( function(_, snip) return snip.captures[1] end ),
       i(0)
     }
   ),
@@ -78,13 +54,11 @@ s({trig="env", snippetType="autosnippet", dscr="A LaTeX environment"},
       \begin{<>}
           <>
       \end{<>}
-      <>
     ]],
     {
       i(1),
       i(2),
       rep(1),
-      i(0),
     }
   ),
   { condition = line_begin }
@@ -131,6 +105,30 @@ s({trig="eq", dscr="A LaTeX equation environment", snippetType="autosnippet"},
       \begin{equation}
           <>
       \end{equation}
+    ]],
+    { i(0) }
+  ),
+  { condition = line_begin }
+),
+-- ALIGN ENVIRONMENT
+s({trig="aln", dscr="A LaTeX equation environment", snippetType="autosnippet"},
+  fmta(
+    [[
+      \begin{align*}
+          <>
+      \end{align*}
+    ]],
+    { i(0) }
+  ),
+  { condition = line_begin }
+),
+-- GATHER ENVIRONMENT
+s({trig="gh", dscr="A LaTeX equation environment", snippetType="autosnippet"},
+  fmta(
+    [[
+      \begin{gather*}
+          <>
+      \end{gather*}
     ]],
     { i(0) }
   ),

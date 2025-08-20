@@ -37,7 +37,7 @@ s({trig="rec", snippetType="autosnippet"},
   ),
   { condition = tex.in_tikz and line_begin }
 ),
-s({trig="cir", snippetType="autosnippet"},
+s({trig="cr", snippetType="autosnippet"},
   fmta(
     [[
       \draw (<>,<>) circle [radius=<>];<>
@@ -51,7 +51,7 @@ s({trig="cir", snippetType="autosnippet"},
   ),
   { condition = tex.in_tikz and line_begin }
 ),
-s({trig="grid", snippetType="autosnippet"},
+s({trig="grd", snippetType="autosnippet"},
   fmta(
     [[
       \draw[step=<>,<>,<>] (<>,<>) grid (<>,<>);<>

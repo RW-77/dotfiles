@@ -94,20 +94,6 @@ s({trig="h3", snippetType="autosnippet"},
     }
   )
 ),
--- INPUT: \input
-s({trig="inn", snippetType="autosnippet"},
-  fmta(
-    [[
-      \input{<><>}
-    ]],
-    {
-      -- i(1, "~/.config/latex/templates/"),
-      i(1),
-      i(2)
-    }
-  ),
-  { condition = line_begin }
-),
 -- LABEL: \label
 s({trig="lbl", snippetType="autosnippet"},
   fmta(
@@ -152,5 +138,36 @@ s({trig="url"},
     }
   )
 ),
+-- PARENTHESIS
+s({trig="(", wordTrig = false, snippetType="autosnippet"},
+  {
+    t("("),
+    d(1, get_visual),
+    t(")"),
+    i(0),
+  },
+  { condition = tex.in_text }
+),
+-- CURLY BRACES
+s({trig="{", wordTrig = false, snippetType="autosnippet"},
+  {
+    t("{"),
+    d(1, get_visual),
+    t("}"),
+    i(0),
+  },
+  { condition = tex.in_text }
+),
+-- SQUARE BRACKETS
+s({trig="[", wordTrig = false, snippetType="autosnippet"},
+  {
+    t("["),
+    d(1, get_visual),
+    t("]"),
+    i(0),
+  },
+  { condition = tex.in_text }
+),
+
 
 }

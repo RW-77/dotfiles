@@ -5,7 +5,6 @@ local i = ls.insert_node
 local f = ls.function_node
 local d = ls.dynamic_node
 local extras = require("luasnip.extras")
-local rep = extras.rep
 local fmta = require("luasnip.extras.fmt").fmta
 
 local helpers = require('caleb.util.luasnip-helpers')
@@ -20,16 +19,129 @@ tex.in_text = function() return not tex.in_mathzone() end
 return {
 
 --[[
--- BASIC
+-- DELIMITERS
 ]]--
 
--- Paired parentheses
+-- DYNAMIC PARENTHESIS
+s({trig = "l%(", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  fmta(
+    [[
+      \left( <> \right)<>
+    ]],
+    {
+      i(1),
+      i(0)
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") * tex.in_mathzone}
+),
+-- DYNAMIC CURLY BRACES
+s({trig = "l%{", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  fmta(
+    [[
+      \left{ <> \right}<>
+    ]],
+    {
+      i(1),
+      i(0)
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+-- DYNAMIC SQUARE BRACKETS
+s({trig = "l%[", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  fmta(
+    [[
+      \left[ <> \right]<>
+    ]],
+    {
+      i(1),
+      i(0)
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+-- DYNAMIC ANGLE BRACKETS
+s({trig = "l%<", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  fmta(
+    [[
+      \left<< <> \right>><>
+    ]],
+    {
+      i(1),
+      i(0)
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+-- DYNAMIC NORM
+s({trig = "l%|", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  fmta(
+    [[
+      \left| <> \right|<>
+    ]],
+    {
+      i(1),
+      i(0)
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+-- DYNAMIC FLOOR
+s({trig = "lfl", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  fmta(
+    [[
+      \left\lfloor <> \right\rfloor<>
+    ]],
+    {
+      i(1),
+      i(0)
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+-- DYNAMIC CEIL
+s({trig = "lce", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  fmta(
+    [[
+      \left\lceil <> \right\rceil<>
+    ]],
+    {
+      i(1),
+      i(0)
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+-- PARENTHESIS
 s({trig="(", wordTrig = false, snippetType="autosnippet"},
   {
     t("("),
     d(1, get_visual),
     t(")"),
-  }
+    i(0),
+  },
+  { condition = tex.in_mathzone and require("luasnip.extras.conditions.expand").trigger_not_preceded_by("l") }
+),
+-- CURLY BRACES
+s({trig="{", wordTrig = false, snippetType="autosnippet"},
+  {
+    t("{"),
+    d(1, get_visual),
+    t("}"),
+    i(0),
+  },
+  { condition = tex.in_mathzone and require("luasnip.extras.conditions.expand").trigger_not_preceded_by("l") }
+),
+-- SQUARE BRACKETS
+s({trig="[", wordTrig = false, snippetType="autosnippet"},
+  {
+    t("["),
+    d(1, get_visual),
+    t("]"),
+    i(0),
+  },
+  { condition = tex.in_mathzone and require("luasnip.extras.conditions.expand").trigger_not_preceded_by("l") }
 ),
 
 --[[
@@ -45,8 +157,11 @@ s({trig=";b", snippetType="autosnippet"},
 s({trig=";g", snippetType="autosnippet"},
   { t("\\gamma") }, { condition = tex.in_mathzone }
 ),
-s({trig=";t", snippetType="autosnippet"},
+s({trig=";th", snippetType="autosnippet"},
   { t("\\theta") }, { condition = tex.in_mathzone }
+),
+s({trig=";ta", snippetType="autosnippet"},
+  { t("\\tau") }, { condition = tex.in_mathzone }
 ),
 s({trig=";d", snippetType="autosnippet"},
   { t("\\delta") }, { condition = tex.in_mathzone }
@@ -54,17 +169,35 @@ s({trig=";d", snippetType="autosnippet"},
 s({trig=";e", snippetType="autosnippet"},
   { t("\\epsilon") }, { condition = tex.in_mathzone }
 ),
-s({trig=";u", snippetType="autosnippet"},
+s({trig=";f", snippetType="autosnippet"},
+  { t("\\phi") }, { condition = tex.in_mathzone }
+),
+s({trig=";m", snippetType="autosnippet"},
   { t("\\mu") }, { condition = tex.in_mathzone }
 ),
 s({trig=";d", snippetType="autosnippet"},
   { t("\\delta") }, { condition = tex.in_mathzone }
 ),
-s({trig=";d", snippetType="autosnippet"},
-  { t("\\delta") }, { condition = tex.in_mathzone }
+s({trig=";l", snippetType="autosnippet"},
+  { t("\\lambda") }, { condition = tex.in_mathzone }
 ),
-s({trig=";d", snippetType="autosnippet"},
-  { t("\\delta") }, { condition = tex.in_mathzone }
+s({trig=";s", snippetType="autosnippet"},
+  { t("\\sigma") }, { condition = tex.in_mathzone }
+),
+s({trig=";r", snippetType="autosnippet"},
+  { t("\\rho") }, { condition = tex.in_mathzone }
+),
+s({trig=";o", snippetType="autosnippet"},
+  { t("\\omega") }, { condition = tex.in_mathzone }
+),
+s({trig=";O", snippetType="autosnippet"},
+  { t("\\Omega") }, { condition = tex.in_mathzone }
+),
+s({trig=";p", snippetType="autosnippet"},
+  { t("\\pi") }, { condition = tex.in_mathzone }
+),
+s({trig=";P", snippetType="autosnippet"},
+  { t("\\Pi") }, { condition = tex.in_mathzone }
 ),
 
 --[[
@@ -127,12 +260,21 @@ s({trig = "([%w%)%]%}])nl", wordTrig=false, regTrig = true, snippetType="autosni
   ),
   {condition = tex.in_mathzone}
 ),
+-- SUPERSCRIPT WITH BRACKETS
+s({trig = "([%w%)%]%}])bl", wordTrig=false, regTrig = true, snippetType="autosnippet"},
+  fmta(
+    "<>^{[<>]}",
+    {
+      f( function(_, snip) return snip.captures[1] end ),
+      d(1, get_visual),
+    }
+  ),
+  {condition = tex.in_mathzone}
+),
 -- HAT
 s({trig = "([^%a])hh", regTrig = true, wordTrig=false, snippetType="autosnippet"},
   fmta(
-    [[
-       <>\hat{<>}
-    ]],
+    [[<>\hat{<>}]],
     {
       f( function(_, snip) return snip.captures[1] end ),
       i(1),
@@ -146,32 +288,91 @@ s({trig = "([^%a])hh", regTrig = true, wordTrig=false, snippetType="autosnippet"
 --]]
 
 -- NORMAL MATH TEXT
-s({trig = "([^%a])tt", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+s({trig = "tt", regTrig = true, wordTrig=false, snippetType="autosnippet"},
   fmta(
     [[
-       <>\text{<>}<>
+       \text{<>}<>
     ]],
     {
-      f( function(_, snip) return snip.captures[1] end ),
       i(1),
       i(0)
     }
   ),
-  { condition = tex.in_mathzone }
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
 ),
-
 -- BOLD MATH TEXT
-s({trig = "([^%a])bf", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+s({trig = "bf", regTrig = true, wordTrig=false, snippetType="autosnippet"},
   fmta(
     [[
-       <>\mathbf{<>}
+       \mathbf{<>}<>
     ]],
     {
-      f( function(_, snip) return snip.captures[1] end ),
       i(1),
+      i(0)
     }
   ),
-  { condition = tex.in_mathzone }
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+-- 
+s({trig = "rm", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  fmta(
+    [[
+       \mathrm{<>}<>
+    ]],
+    {
+      i(1),
+      i(0)
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+s({trig = "sq", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  fmta(
+    [[
+       \sqrt{<>}<>
+    ]],
+    {
+      i(1),
+      i(0)
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+s({trig = "sin", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\sin"),
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+s({trig = "cos", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\cos"),
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+s({trig = "tan", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\tan"),
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+s({trig = "arcs", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\arcsin"),
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+s({trig = "arcc", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\arccos"),
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+s({trig = "arct", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\arctan"),
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
 ),
 
 --[[
@@ -190,18 +391,18 @@ s({trig = '([^%a])ee', regTrig = true, wordTrig = false, snippetType="autosnippe
   { condition = tex.in_mathzone }
 ),
 -- FRACTION: \frac{}{}
-s({trig = '([^%a])ff', regTrig = true, wordTrig = false, snippetType="autosnippet"},
+s({trig = "ff", regTrig = true, wordTrig=false, snippetType="autosnippet"},
   fmta(
     [[
-      <>\frac{<>}{<>}
+      \frac{<>}{<>}<>
     ]],
     {
-      f( function(_, snip) return snip.captures[1] end ),
       i(1),
-      i(2)
+      i(2),
+      i(0)
     }
   ),
-  { condition = tex.in_mathzone }
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
 ),
 -- SUM with lower limit
 s({trig = "([^%a])sM", wordTrig = false, regTrig = true, snippetType="autosnippet"},
@@ -225,6 +426,28 @@ s({trig = "([^%a])smm", wordTrig = false, regTrig = true, snippetType="autosnipp
     }
   ),
   {condition = tex.in_mathzone}
+),
+-- INT with upper and lower limit
+s({trig = "([^%a])int", wordTrig = false, regTrig = true, snippetType="autosnippet"},
+  fmta(
+    "<>\\int_{<>}^{<>}",
+    {
+      f( function(_, snip) return snip.captures[1] end ),
+      i(1),
+      i(2),
+    }
+  ),
+  {condition = tex.in_mathzone}
+),
+s({trig="df", snippetType="autosnippet"},
+  {
+    t("\\diff")
+  }, { condition = tex.in_mathzone }
+),
+s({trig="pt", snippetType="autosnippet"},
+  {
+    t("\\partial")
+  }, { condition = tex.in_mathzone }
 ),
 
 }

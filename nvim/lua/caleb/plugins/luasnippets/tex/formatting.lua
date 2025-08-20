@@ -97,4 +97,31 @@ s({trig = "([^%l])tm", regTrig = true, wordTrig = false, snippetType="autosnippe
     { condition = tex.in_mathzone }
 ),
 
+-- SI: \SI{}{}
+s({trig="sii", dscr="Expands 'tbb' into '\textbf{}'", snippetType="autosnippet"},
+  fmta(
+    "\\SI{<>}{<>}<>",
+    {
+      i(1),
+      i(2),
+      i(0)
+    }
+  )
+),
+-- \kilo\ohm
+s({trig = "kohm", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\kilo\\ohm"),
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a")}
+),
+-- \kilo\ohm
+s({trig = "pll", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\mathbin{\\|}"),
+
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+
 }
