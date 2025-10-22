@@ -9,7 +9,16 @@ local fmta = require("luasnip.extras.fmt").fmta
 
 local helpers = require('caleb.util.luasnip-helpers')
 local get_visual = helpers.get_visual
-local line_begin = require("luasnip.extras.expand_conditions").line_begin
+local line_begin = require("luasnip.extras.conditions.expand").line_begin
+
+local function env(name)
+    local is_inside = vim.fn['vimtex#env#is_inside'](name)
+    return (is_inside[1] > 0 and is_inside[2] > 0)
+end
+
+local function tikz()
+  return env("tikzpicture")
+end
 
 local tex = {}
 tex.in_mathzone = function() return vim.fn['vimtex#syntax#in_mathzone']() == 1 end
@@ -20,17 +29,19 @@ end
 
 return {
 
--- NORMAL MATH TEXT
-s({trig = "([^%l])mm", regTrig = true, wordTrig = false, snippetType="autosnippet"},
+-- INLINE MATH 
+s({trig = "mm", wordTrig = false, regTrig = true, snippetType="autosnippet"},
   fmta(
-    "<>$<>$<>",
+    "$<>$<>",
     {
-      f( function(_, snip) return snip.captures[1] end ),
-      d(1, get_visual),
+      i(1),
       i(0)
     }
   ),
-  { condition = tex.in_text }
+  {
+    condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a")
+    * tex.in_text
+  }
 ),
 -- MINTINLINE: \mintinline
 s({trig = "([^%l])mt", regTrig = true, wordTrig = false, snippetType="autosnippet"},

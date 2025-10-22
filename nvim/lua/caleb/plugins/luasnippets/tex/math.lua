@@ -151,20 +151,35 @@ s({trig="[", wordTrig = false, snippetType="autosnippet"},
 s({trig=";a", snippetType="autosnippet"},
   { t("\\alpha") }, { condition = tex.in_mathzone }
 ),
+s({trig=";A", snippetType="autosnippet"},
+  { t("\\Alpha") }, { condition = tex.in_mathzone }
+),
 s({trig=";b", snippetType="autosnippet"},
   { t("\\beta") }, { condition = tex.in_mathzone }
+),
+s({trig=";B", snippetType="autosnippet"},
+  { t("\\Beta") }, { condition = tex.in_mathzone }
 ),
 s({trig=";g", snippetType="autosnippet"},
   { t("\\gamma") }, { condition = tex.in_mathzone }
 ),
+s({trig=";G", snippetType="autosnippet"},
+  { t("\\Gamma") }, { condition = tex.in_mathzone }
+),
 s({trig=";th", snippetType="autosnippet"},
   { t("\\theta") }, { condition = tex.in_mathzone }
+),
+s({trig=";Th", snippetType="autosnippet"},
+  { t("\\Theta") }, { condition = tex.in_mathzone }
 ),
 s({trig=";ta", snippetType="autosnippet"},
   { t("\\tau") }, { condition = tex.in_mathzone }
 ),
 s({trig=";d", snippetType="autosnippet"},
   { t("\\delta") }, { condition = tex.in_mathzone }
+),
+s({trig=";D", snippetType="autosnippet"},
+  { t("\\Delta") }, { condition = tex.in_mathzone }
 ),
 s({trig=";e", snippetType="autosnippet"},
   { t("\\epsilon") }, { condition = tex.in_mathzone }
@@ -177,6 +192,9 @@ s({trig=";m", snippetType="autosnippet"},
 ),
 s({trig=";d", snippetType="autosnippet"},
   { t("\\delta") }, { condition = tex.in_mathzone }
+),
+s({trig=";D", snippetType="autosnippet"},
+  { t("\\Delta") }, { condition = tex.in_mathzone }
 ),
 s({trig=";l", snippetType="autosnippet"},
   { t("\\lambda") }, { condition = tex.in_mathzone }
@@ -374,21 +392,39 @@ s({trig = "arct", regTrig = true, wordTrig=false, snippetType="autosnippet"},
   },
   {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
 ),
+s({trig = "cup", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\cup"),
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+s({trig = "cap", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\cap"),
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
+s({trig = "sd", regTrig = true, wordTrig=false, snippetType="autosnippet"},
+  {
+    t("\\cdot"),
+  },
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
+),
 
 --[[
 -- MATH CONSTRUCTS
 --]]
 
 -- EXPONENTIAL: e^{}
-s({trig = '([^%a])ee', regTrig = true, wordTrig = false, snippetType="autosnippet"},
+s({trig = 'ee', regTrig = true, wordTrig = false, snippetType="autosnippet"},
   fmta(
-    "<>e^{<>}",
+    "e^{<>}<>",
     {
-      f( function(_, snip) return snip.captures[1] end ),
-      d(1, get_visual)
+      i(1),
+      i(0),
     }
   ),
-  { condition = tex.in_mathzone }
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
 ),
 -- FRACTION: \frac{}{}
 s({trig = "ff", regTrig = true, wordTrig=false, snippetType="autosnippet"},
@@ -405,27 +441,50 @@ s({trig = "ff", regTrig = true, wordTrig=false, snippetType="autosnippet"},
   {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") and tex.in_mathzone}
 ),
 -- SUM with lower limit
-s({trig = "([^%a])sM", wordTrig = false, regTrig = true, snippetType="autosnippet"},
+s({trig = "sM", wordTrig = false, regTrig = true, snippetType="autosnippet"},
   fmta(
-    "<>\\sum_{<>}",
+    "\\sum_{<>}<>",
     {
-      f( function(_, snip) return snip.captures[1] end ),
       i(1),
+      i(0),
     }
   ),
-  {condition = tex.in_mathzone}
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") * tex.in_mathzone}
 ),
 -- SUM with upper and lower limit
-s({trig = "([^%a])smm", wordTrig = false, regTrig = true, snippetType="autosnippet"},
+s({trig = "smm", wordTrig = false, regTrig = true, snippetType="autosnippet"},
   fmta(
-    "<>\\sum_{<>}^{<>}",
+    "\\sum_{<>}^{<>}<>",
     {
-      f( function(_, snip) return snip.captures[1] end ),
       i(1),
       i(2),
+      i(0),
     }
   ),
-  {condition = tex.in_mathzone}
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") * tex.in_mathzone}
+),
+-- PROD with lower limit
+s({trig = "pD", wordTrig = false, regTrig = true, snippetType="autosnippet"},
+  fmta(
+    "\\prod_{<>}<>",
+    {
+      i(1),
+      i(0),
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") * tex.in_mathzone}
+),
+-- PROD with upper and lower limit
+s({trig = "pdd", wordTrig = false, regTrig = true, snippetType="autosnippet"},
+  fmta(
+    "\\prod_{<>}^{<>}<>",
+    {
+      i(1),
+      i(2),
+      i(0),
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") * tex.in_mathzone}
 ),
 -- INT with upper and lower limit
 s({trig = "([^%a])int", wordTrig = false, regTrig = true, snippetType="autosnippet"},
@@ -437,7 +496,53 @@ s({trig = "([^%a])int", wordTrig = false, regTrig = true, snippetType="autosnipp
       i(2),
     }
   ),
-  {condition = tex.in_mathzone}
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") * tex.in_mathzone}
+),
+-- BIGCUP with lower limit
+s({trig = "cU", wordTrig = false, regTrig = true, snippetType="autosnippet"},
+  fmta(
+    "\\bigcup_{<>}<>",
+    {
+      i(1),
+      i(0),
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") * tex.in_mathzone}
+),
+-- BIGCUP with upper and lower limit
+s({trig = "cuu", wordTrig = false, regTrig = true, snippetType="autosnippet"},
+  fmta(
+    "\\bigcup_{<>}^{<>}<>",
+    {
+      i(1),
+      i(2),
+      i(0),
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") * tex.in_mathzone}
+),
+-- BIGCAP with lower limit
+s({trig = "cA", wordTrig = false, regTrig = true, snippetType="autosnippet"},
+  fmta(
+    "\\bigcap_{<>}<>",
+    {
+      i(1),
+      i(0),
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") * tex.in_mathzone}
+),
+-- BIGCAP with upper and lower limit
+s({trig = "caa", wordTrig = false, regTrig = true, snippetType="autosnippet"},
+  fmta(
+    "\\bigcap_{<>}^{<>}<>",
+    {
+      i(1),
+      i(2),
+      i(0),
+    }
+  ),
+  {condition = require("luasnip.extras.conditions.expand").trigger_not_preceded_by("%a") * tex.in_mathzone}
 ),
 s({trig="df", snippetType="autosnippet"},
   {

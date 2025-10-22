@@ -1,3 +1,6 @@
+vim.opt.wrap = true
+vim.opt.textwidth=80
+
 local ls = require("luasnip")
 
 vim.keymap.set({"i"}, "<C-K>", function()

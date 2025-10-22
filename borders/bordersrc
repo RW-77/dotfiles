@@ -1,0 +1,7 @@
+options=(
+    hidpi=on
+    active_color=0xCC00ffff
+    width=7.0
+)
+
+borders "${options[@]}"

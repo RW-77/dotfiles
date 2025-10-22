@@ -24,6 +24,11 @@ vim.g.vimtex_compiler_latexmk_engines = {
   ['_'] = '-lualatex',
 }
 
+vim.g.vimtex_compiler_latexmk = {
+  ['aux_dir'] = 'aux',
+  ['out_dir'] = 'output'
+}
+
 -- trigger continuous compilation
 vim.keymap.set("n", "<localleader>C", "<Plug>(vimtex-compile)")
 -- stop continuous compilation

@@ -12,6 +12,7 @@ return {
 
     -- import mason_lspconfig plugin
     local mason_lspconfig = require("mason-lspconfig")
+    mason_lspconfig.setup()
 
     -- import cmp-nvim-lsp plugin
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
@@ -63,56 +64,6 @@ return {
         opts.desc = "Restart LSP"
         vim.keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
       end,
-    })
-
-    -- used to enable autocompletion (assign to every lsp server config)
-    local capabilities = cmp_nvim_lsp.default_capabilities()
-    mason_lspconfig.setup_handlers({
-        -- default handler for installed servers
-        function(server_name)
-            lspconfig[server_name].setup({
-                capabilities = capabilities,
-            })
-        end,
-
-        -- Verilog support
-        ["hdl_checker"] = function()
-            lspconfig["hdl_checker"].setup({
-                capabilities = capabilities,
-                filetypes = { "verilog", "systemverilog", "vhdl" },
-                root_dir = lspconfig.util.root_pattern(".hdl_checker.config", ".git"),
-            })
-        end,
-
-        -- Dockerfile support
-        ["dockerls"] = function()
-            lspconfig["dockerls"].setup({
-                capabilities = capabilities,
-                filetypes = { "dockerfile" },
-                root_dir = lspconfig.util.root_pattern("Dockerfile", ".git"),
-            })
-        end,
-
-        -- Add this for C++ support
-        ["clangd"] = function()
-            lspconfig["clangd"].setup({
-                capabilities = capabilities,
-                cmd = { "clangd", "--background-index", "--suggest-missing-includes" },
-                filetypes = { "c", "cpp", "objc", "objcpp" },
-                root_dir = function(fname)
-                    local util = require('lspconfig.util')
-
-                    -- Check if compile_commands.json is in the build directory
-                    local build_dir = util.path.dirname(fname) .. "/build"
-                    if util.path.exists(build_dir .. "/compile_commands.json") then
-                        return build_dir
-                    end
-
-                    -- Fall back to the usual root pattern search
-                    return util.root_pattern("compile_commands.json", ".git")(fname) or util.find_git_ancestor(fname)
-                end,
-            })
-        end,
     })
   end,
 }

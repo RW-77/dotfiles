@@ -97,6 +97,16 @@ s({trig = "([^%l])tm", regTrig = true, wordTrig = false, snippetType="autosnippe
     { condition = tex.in_mathzone }
 ),
 
+-- \si{}
+s({trig="ssi", dscr="Expands 'tbb' into '\textbf{}'", snippetType="autosnippet"},
+  fmta(
+    "\\si{<>}<>",
+    {
+      i(1),
+      i(0)
+    }
+  )
+),
 -- SI: \SI{}{}
 s({trig="sii", dscr="Expands 'tbb' into '\textbf{}'", snippetType="autosnippet"},
   fmta(
@@ -108,6 +118,7 @@ s({trig="sii", dscr="Expands 'tbb' into '\textbf{}'", snippetType="autosnippet"}
     }
   )
 ),
+
 -- \kilo\ohm
 s({trig = "kohm", regTrig = true, wordTrig=false, snippetType="autosnippet"},
   {
