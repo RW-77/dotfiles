@@ -1,33 +1,30 @@
 return {
-  "mason-org/mason.nvim",
-  dependencies = {
-    "mason-org/mason-lspconfig.nvim",
+  "mason-org/mason-lspconfig.nvim",
+  opts = {
+    ensure_installed = {
+      "lua_ls",
+      "clangd",
+      "dockerls",
+      "basedpyright",
+      "vtsls",
+      "eslint",
+      "tailwindcss",
+      "html",
+    },
   },
-  config = function()
-    -- import mason
-    local mason = require("mason")
-
-    -- import mason-lspconfig
-    local mason_lspconfig = require("mason-lspconfig")
-
-    -- enable mason and configure icons
-    mason.setup({
-      ui = {
-        icons = {
-          package_installed = "✓",
-          package_pending = "➜",
-          package_uninstalled = "✗"
-        }
+  dependencies = {
+    {
+      "mason-org/mason.nvim",
+      opts = {
+        ui = {
+          icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗"
+          }
+        },
       }
-    })
-
-    mason_lspconfig.setup({
-      ensure_installed = {
-        "lua_ls",
-        "clangd",
-        "hdl_checker",
-        "dockerls",
-      },
-    })
-  end,
+    },
+    "neovim/nvim-lspconfig"
+  }
 }
